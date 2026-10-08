@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#241b17">
+  <meta name="description" content="Monte sua pizza artesanal do seu jeito na Bella Roza Pizzaria.">
+  <title>Bella Roza Pizzaria | Cria Fatia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Bella Roza Pizzaria, início">
+      <span class="brand-mark" aria-hidden="true">BR</span>
+      <span>Bella <b>Roza</b><small>PIZZARIA ARTESANAL</small></span>
+    </a>
+    <div class="topbar-side">
+      <a href="tel:+551137436583">(11) 3743-6583</a>
+      <a href="tel:+551137422809">(11) 3742-2809</a>
+      <a href="https://wa.me/5511989484350" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <p class="hero-kicker">Feita por você, com carinho</p>
+    <h1 class="hero-title">Cria <span>Fatia</span></h1>
+    <p class="hero-sub">Sua pizza, suas regras. Escolha cada detalhe e acompanhe sua criação nascer.</p>
+  </section>
+
+  <nav class="progress-wrap" aria-label="Etapas do pedido">
+    <ol class="progress" id="progress"></ol>
+  </nav>
+
+  <main>
+    <div class="container">
+      <div class="layout">
+        <div class="layout-left">
+          <div id="steps" class="steps" aria-live="polite"></div>
+          <div class="nav" id="wizard-nav">
+            <button id="btn-prev" class="btn btn-ghost" type="button">← Voltar</button>
+            <button id="btn-next" class="btn btn-primary" type="button">Continuar</button>
+          </div>
+        </div>
+
+        <aside class="stage-wrap" id="pizza-preview" aria-label="Prévia da pizza montada">
+          <div class="stage-label"><span>Sua criação</span> · ao vivo</div>
+          <div class="stage">
+            <div class="stage-ring"></div>
+            <div class="pizza idle" id="pizza">
+              <div class="pizza-content" id="pizza-content">
+                <svg class="pizza-art" viewBox="0 0 200 200" aria-hidden="true">
+                  <defs>
+                    <radialGradient id="crust-gradient" cx="34%" cy="27%" r="78%">
+                      <stop offset="0" stop-color="#ffe7ad"/>
+                      <stop offset=".48" stop-color="#e5ad63"/>
+                      <stop offset=".82" stop-color="#c8793e"/>
+                      <stop offset="1" stop-color="#9c572f"/>
+                    </radialGradient>
+                    <pattern id="crust-speckles" width="31" height="29" patternUnits="userSpaceOnUse">
+                      <circle cx="6" cy="8" r="1.5" fill="#8b4928" opacity=".3"/>
+                      <circle cx="22" cy="20" r="1" fill="#fff0c2" opacity=".65"/>
+                      <circle cx="26" cy="4" r=".8" fill="#9a552d" opacity=".4"/>
+                      <ellipse cx="14" cy="26" rx="2" ry=".8" fill="#874523" opacity=".27"/>
+                      <circle cx="3" cy="23" r=".7" fill="#fff2cf" opacity=".7"/>
+                    </pattern>
+                  </defs>
+                  <circle cx="100" cy="100" r="98" fill="url(#crust-gradient)"/>
+                  <circle cx="100" cy="100" r="95" fill="url(#crust-speckles)" opacity=".85"/>
+                  <g fill="#874521" opacity=".34">
+                    <ellipse cx="98" cy="7" rx="4.5" ry="1.8" transform="rotate(-8 98 7)"/>
+                    <ellipse cx="143" cy="19" rx="3.5" ry="1.5" transform="rotate(35 143 19)"/>
+                    <ellipse cx="179" cy="48" rx="4" ry="1.7" transform="rotate(62 179 48)"/>
+                    <ellipse cx="192" cy="99" rx="3.6" ry="1.6" transform="rotate(88 192 99)"/>
+                    <ellipse cx="173" cy="151" rx="4.2" ry="1.6" transform="rotate(130 173 151)"/>
+                    <ellipse cx="124" cy="190" rx="4.3" ry="1.7" transform="rotate(168 124 190)"/>
+                    <ellipse cx="67" cy="184" rx="3.8" ry="1.5" transform="rotate(202 67 184)"/>
+                    <ellipse cx="20" cy="144" rx="4.2" ry="1.7" transform="rotate(238 20 144)"/>
+                    <ellipse cx="8" cy="91" rx="3.8" ry="1.5" transform="rotate(270 8 91)"/>
+                    <ellipse cx="36" cy="42" rx="4" ry="1.6" transform="rotate(310 36 42)"/>
+                  </g>
+                  <g fill="#fff0ca" opacity=".52">
+                    <circle cx="114" cy="5" r="1.2"/><circle cx="167" cy="34" r="1"/>
+                    <circle cx="189" cy="125" r="1.1"/><circle cx="151" cy="179" r="1.3"/>
+                    <circle cx="47" cy="173" r="1"/><circle cx="9" cy="116" r="1.2"/>
+                    <circle cx="25" cy="58" r="1"/><circle cx="73" cy="9" r="1.1"/>
+                  </g>
+                  <circle cx="100" cy="100" r="96" fill="none" stroke="#ffe0a0" stroke-width="2" opacity=".75"/>
+                </svg>
+                <div class="pizza-sauce" id="pizza-sauce"></div>
+                <svg class="pizza-cheese" viewBox="0 0 200 200" aria-hidden="true">
+                  <defs>
+                    <radialGradient id="cheese-gradient" cx="38%" cy="31%" r="80%">
+                      <stop offset="0" stop-color="#fff8d1"/>
+                      <stop offset=".58" stop-color="#f5dc8b"/>
+                      <stop offset="1" stop-color="#e8bd61"/>
+                    </radialGradient>
+                    <filter id="cheese-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#75451f" flood-opacity=".3"/>
+                    </filter>
+                  </defs>
+                  <path d="M100 19 C112 18 119 24 129 23 C140 22 144 30 151 35 C162 42 163 51 168 61 C176 72 173 82 178 92 C183 105 176 114 175 124 C174 137 166 142 160 151 C154 162 143 164 134 170 C123 178 113 174 102 180 C90 184 81 176 70 174 C57 172 53 163 44 156 C34 149 34 137 28 127 C22 116 27 105 22 95 C18 83 25 73 29 62 C32 50 42 45 49 36 C57 26 69 28 80 23 C88 19 94 22 100 19 Z" fill="url(#cheese-gradient)" filter="url(#cheese-shadow)"/>
+                  <g fill="#fff9df" opacity=".78">
+                    <circle cx="78" cy="66" r="5"/><circle cx="126" cy="79" r="4"/>
+                    <circle cx="91" cy="121" r="3.5"/><circle cx="139" cy="119" r="5"/>
+                    <circle cx="65" cy="105" r="3"/><circle cx="111" cy="145" r="4"/>
+                  </g>
+                  <g fill="#bd713b" opacity=".5">
+                    <circle cx="109" cy="58" r="2.8"/><circle cx="148" cy="95" r="2.2"/>
+                    <circle cx="77" cy="145" r="2.5"/><circle cx="123" cy="132" r="1.8"/>
+                  </g>
+                  <g fill="#a85c31" opacity=".68">
+                    <ellipse cx="101" cy="48" rx="4.5" ry="2.2" transform="rotate(-24 101 48)"/>
+                    <ellipse cx="151" cy="77" rx="3.2" ry="1.8" transform="rotate(43 151 77)"/>
+                    <ellipse cx="131" cy="151" rx="4.1" ry="2" transform="rotate(-38 131 151)"/>
+                    <ellipse cx="59" cy="121" rx="3.7" ry="1.9" transform="rotate(20 59 121)"/>
+                    <ellipse cx="78" cy="82" rx="2.7" ry="1.5" transform="rotate(-12 78 82)"/>
+                  </g>
+                  <g fill="#fffbe9" opacity=".46">
+                    <ellipse cx="72" cy="55" rx="7" ry="2" transform="rotate(-30 72 55)"/>
+                    <ellipse cx="135" cy="105" rx="5" ry="1.7" transform="rotate(32 135 105)"/>
+                    <ellipse cx="93" cy="158" rx="6" ry="1.8" transform="rotate(-12 93 158)"/>
+                  </g>
+                </svg>
+                <img class="pizza-photo" id="pizza-photo" src="assets/pizza-reference.jpg" alt="" aria-hidden="true">
+                <div class="pizza-toppings" id="pizza-toppings"></div>
+                <div class="pizza-oregano" id="pizza-oregano"></div>
+                <svg class="pizza-cuts" id="pizza-cuts" viewBox="0 0 200 200" aria-hidden="true"></svg>
+                <div class="pizza-hint" id="pizza-hint"><span class="hint-pizza">✦</span><span class="hint-text">SUA PIZZA COMEÇA AQUI</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="pizza-status" id="pizza-status">Uma receita esperando por você</p>
+          <ul class="pizza-legend" id="pizza-legend"></ul>
+          <div class="preview-price-card">
+            <span>VALOR ATUAL</span>
+            <strong id="preview-price">—</strong>
+            <small>Foto de referência · seus sabores aparecem sobre ela</small>
+          </div>
+          <p class="photo-credit"><a href="https://commons.wikimedia.org/wiki/File:Margherita_pizza_on_plate.jpg" target="_blank" rel="noopener noreferrer">“Margherita pizza on plate” — Shisma / Wikimedia Commons</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></p>
+          <div class="preview-controls" id="preview-controls" hidden role="group" aria-label="Visualização da pizza">
+            <button type="button" class="preview-toggle active" data-preview-mode="whole" aria-pressed="true">Pizza inteira</button>
+            <button type="button" class="preview-toggle" data-preview-mode="slice" aria-pressed="false">Fatia selecionada</button>
+          </div>
+          <p class="slice-preview-label" id="slice-preview-label" hidden></p>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">Bella Roza Pizzaria <span>·</span> Projeto integrador Cria Fatia</footer>
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
