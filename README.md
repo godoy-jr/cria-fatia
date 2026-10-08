@@ -13,10 +13,10 @@ Abra `index.html` em um navegador moderno. Não é necessário instalar dependê
 - Massa Normal inclusa ou Integral por mais R$ 4.
 - Molho de tomate opcional.
 - Até 8 ingredientes entre opções da casa ou ingrediente personalizado.
-- Montagem uniforme na pizza inteira ou personalização fatia por fatia, com seletor visual interativo.
-- Na montagem por fatias, ingredientes repetidos são contabilizados uma vez no limite e no preço.
-- Sugestões de combinações (Marguerita, Calabresa da casa e Caipira cremosa) que podem ser aplicadas à pizza inteira ou à fatia selecionada.
-- Prévia ilustrada em SVG com borda assada texturizada, pontos tostados, queijo e molho em camadas, ingredientes desenhados com formas próprias e rotação variável, animação de montagem, cortes destacados, zoom opcional na fatia ativa e preço atualizado ao vivo.
+- Montagem uniforme na pizza inteira ou personalização em 3 partes iguais, com até um sabor diferente em cada parte.
+- Na montagem em 3 partes, ingredientes repetidos são contabilizados uma vez no limite e no preço.
+- Sugestões de combinações (Marguerita, Calabresa da casa e Caipira cremosa) que podem ser aplicadas à pizza inteira ou à parte selecionada.
+- Prévia ilustrada em SVG com borda assada texturizada, pontos tostados, queijo e molho em camadas, ingredientes desenhados com formas próprias e rotação variável, animação de montagem, divisão em 3 partes para escolha de sabores, zoom opcional na parte ativa e preço atualizado ao vivo.
 - Prévia com uma foto local de referência ([“Margherita pizza on plate”](https://commons.wikimedia.org/wiki/File:Margherita_pizza_on_plate.jpg), de Shisma / Wikimedia Commons, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)); os ingredientes escolhidos continuam sendo sobrepostos ao vivo, e a arte SVG é usada como fallback se a foto não carregar.
 - Os 4 primeiros ingredientes diferentes são inclusos; cada ingrediente adicional custa R$ 3.
 - Orégano opcional, resumo detalhado, pagamento (PIX, cartão ou dinheiro) e endereço.

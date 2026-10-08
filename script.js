@@ -35,6 +35,7 @@ const SUGESTOES = [
   { id: 'caipira', label: 'Caipira cremosa', items: ['frango', 'catupiry', 'milho', 'bacon'] },
 ];
 const MAX_RECHEIOS = 8;
+const PARTES_SABOR = 3;
 const TAXA_RECHEIO_EXTRA = 3;
 const RECHEIOS_INCLUSOS = 4;
 const ETAPAS = [
@@ -42,7 +43,7 @@ const ETAPAS = [
   { id: 'tamanho', title: 'Escolha o tamanho', subtitle: 'Qual tamanho combina com a sua fome de hoje?' },
   { id: 'massa', title: 'Escolha a massa', subtitle: 'A base perfeita para a sua criação.' },
   { id: 'molho', title: 'Vai molho?', subtitle: 'Nosso molho de tomate artesanal ou sem molho?' },
-  { id: 'recheios', title: 'Crie seu recheio', subtitle: 'Escolha até 8 ingredientes. Os 4 primeiros já estão inclusos.' },
+  { id: 'recheios', title: 'Crie seu recheio', subtitle: 'Escolha até 8 ingredientes e personalize a pizza inteira ou cada uma das 3 partes.' },
   { id: 'oregano', title: 'Finaliza com orégano?', subtitle: 'Um toque aromático para fechar sua criação.' },
   { id: 'resumo', title: 'Confira sua criação', subtitle: 'Tudo certo? Confira os detalhes e o valor antes de continuar.' },
   { id: 'checkout', title: 'Onde entregamos?', subtitle: 'Preencha seus dados e escolha como prefere pagar.' },
@@ -90,7 +91,7 @@ function hasUniqueTopping(id) {
 
 function getRecheiosUnicos() {
   const items = state.modoRecheio === 'fatia'
-    ? Array.from({ length: state.tamanho?.fatias || 0 }, (_, index) => state.recheiosPorFatia[index] || []).flat()
+    ? Array.from({ length: PARTES_SABOR }, (_, index) => state.recheiosPorFatia[index] || []).flat()
     : state.recheios;
   return [...new Map(items.map(item => [getRecheioLabel(item).trim().toLocaleLowerCase('pt-BR'), item])).values()];
 }
@@ -162,7 +163,7 @@ function renderStep() {
         <p class="pricing-note">Até ${RECHEIOS_INCLUSOS} ingredientes inclusos · + ${fmt(TAXA_RECHEIO_EXTRA)} por ingrediente adicional</p>
         <div class="filling-mode" role="group" aria-label="Como distribuir os recheios">
           <button type="button" class="mode-button${state.modoRecheio === 'inteira' ? ' selected' : ''}" data-mode="inteira" aria-pressed="${state.modoRecheio === 'inteira'}">🍕 Pizza inteira</button>
-          <button type="button" class="mode-button${state.modoRecheio === 'fatia' ? ' selected' : ''}" data-mode="fatia" aria-pressed="${state.modoRecheio === 'fatia'}">◒ Criar fatia por fatia</button>
+          <button type="button" class="mode-button${state.modoRecheio === 'fatia' ? ' selected' : ''}" data-mode="fatia" aria-pressed="${state.modoRecheio === 'fatia'}">◒ Dividir em 3 sabores</button>
         </div>
         ${state.modoRecheio === 'fatia' ? renderSliceSelector() : '<p class="mode-hint">Os recheios escolhidos serão distribuídos em toda a pizza.</p>'}
         <div class="preset-heading"><h3>Ideias para inspirar</h3><span>Toque para usar ou personalize</span></div>
@@ -180,7 +181,7 @@ function renderStep() {
             <button type="button" class="btn btn-secondary" id="btn-confirm-custom">Adicionar</button>
           </div>
         </div>
-        ${getRecheiosAtivos().length ? `<ul class="selected-list" aria-label="Ingredientes selecionados">${getRecheiosAtivos().map((item, index) => `<li>${escapeHTML(getRecheioLabel(item))}<button type="button" data-remove="${index}" aria-label="Remover ${escapeHTML(getRecheioLabel(item))}">×</button></li>`).join('')}</ul>` : `<p class="empty-selection">${state.modoRecheio === 'fatia' ? `Esta fatia ainda está vazia. Você pode repetir um sabor ou inventar uma combinação nova.` : 'Você pode continuar sem recheios ou adicionar até 8 ingredientes.'}</p>`}`;
+        ${getRecheiosAtivos().length ? `<ul class="selected-list" aria-label="Ingredientes selecionados">${getRecheiosAtivos().map((item, index) => `<li>${escapeHTML(getRecheioLabel(item))}<button type="button" data-remove="${index}" aria-label="Remover ${escapeHTML(getRecheioLabel(item))}">×</button></li>`).join('')}</ul>` : `<p class="empty-selection">${state.modoRecheio === 'fatia' ? `Esta parte ainda está vazia. Você pode repetir um sabor ou inventar uma combinação nova.` : 'Você pode continuar sem recheios ou adicionar até 8 ingredientes.'}</p>`}`;
       break;
     case 'oregano':
       content = `<div class="options-grid">${optionCard('🌿', 'Sim, por favor', 'Orégano fresco por cima', 'sim', state.oregano === 'sim')}${optionCard('✨', 'Sem orégano', 'Deixe assim, está perfeita', 'nao', state.oregano === 'nao')}</div>`;
@@ -201,7 +202,7 @@ function renderStep() {
 }
 
 function renderSliceSelector() {
-  const count = state.tamanho.fatias;
+  const count = PARTES_SABOR;
   const segments = Array.from({ length: count }, (_, index) => {
     const start = (index * 360 / count) - 90;
     const end = ((index + 1) * 360 / count) - 90;
@@ -216,28 +217,28 @@ function renderSliceSelector() {
     const labelY = (100 + 57 * Math.sin(middle * Math.PI / 180) + 5).toFixed(2);
     const selected = state.fatiaAtiva === index;
     const toppingCount = state.recheiosPorFatia[index]?.length || 0;
-    return `<g class="slice-segment${selected ? ' active' : ''}" data-slice="${index}" role="button" tabindex="0" aria-label="Fatia ${index + 1}, ${toppingCount} ingrediente${toppingCount === 1 ? '' : 's'}" aria-pressed="${selected}">
+    return `<g class="slice-segment${selected ? ' active' : ''}" data-slice="${index}" role="button" tabindex="0" aria-label="Parte ${index + 1}, ${toppingCount} ingrediente${toppingCount === 1 ? '' : 's'}" aria-pressed="${selected}">
       <path d="M 100 100 L ${first.x} ${first.y} A 91 91 0 0 1 ${last.x} ${last.y} Z"></path>
       <text x="${labelX}" y="${labelY}">${index + 1}</text>
     </g>`;
   }).join('');
   return `<div class="slice-builder">
-    <p class="mode-hint">Toque em uma fatia e escolha os ingredientes dela. Os sabores iguais contam uma vez no limite e no preço.</p>
-    <div class="slice-wheel-wrap"><svg class="slice-wheel" viewBox="0 0 200 200" role="group" aria-label="Escolha a fatia para personalizar">${segments}</svg></div>
-    <p class="active-slice-label">Editando a fatia <strong>${state.fatiaAtiva + 1}</strong> de ${count} · ${state.recheiosPorFatia[state.fatiaAtiva]?.length || 0} ingrediente(s)</p>
+    <p class="mode-hint">Toque em uma das 3 partes e escolha o sabor. Ingredientes iguais contam uma vez no limite e no preço.</p>
+    <div class="slice-wheel-wrap"><svg class="slice-wheel" viewBox="0 0 200 200" role="group" aria-label="Escolha uma das 3 partes para personalizar">${segments}</svg></div>
+    <p class="active-slice-label">Editando a parte <strong>${state.fatiaAtiva + 1}</strong> de ${count} · ${state.recheiosPorFatia[state.fatiaAtiva]?.length || 0} ingrediente(s)</p>
   </div>`;
 }
 
 function renderSummary() {
   const uniqueToppings = getRecheiosUnicos();
   const toppings = state.modoRecheio === 'fatia'
-    ? 'Montagem personalizada em cada fatia'
+    ? 'Montagem personalizada em 3 partes'
     : uniqueToppings.length ? uniqueToppings.map(getRecheioLabel).join(', ') : 'Sem recheios adicionais';
   const extras = Math.max(0, uniqueToppings.length - RECHEIOS_INCLUSOS);
   const perSliceRows = state.modoRecheio === 'fatia'
-    ? Array.from({ length: state.tamanho.fatias }, (_, index) => {
+    ? Array.from({ length: PARTES_SABOR }, (_, index) => {
       const fillings = state.recheiosPorFatia[index] || [];
-      return summaryRow(`Fatia ${index + 1}`, fillings.length ? fillings.map(getRecheioLabel).join(', ') : 'Sem recheios', '');
+      return summaryRow(`Parte ${index + 1}`, fillings.length ? fillings.map(getRecheioLabel).join(', ') : 'Sem recheios', '');
     }).join('')
     : '';
   return `<div class="summary-card">
@@ -246,7 +247,7 @@ function renderSummary() {
     ${summaryRow('Massa', state.massa.label, state.massa.preco ? fmt(state.massa.preco) : 'Inclusa')}
     ${summaryRow('Molho', state.molho.id === 'sim' ? 'Molho artesanal' : 'Sem molho', 'Incluso')}
     ${summaryRow('Ingredientes', toppings, extras ? `${extras} × ${fmt(TAXA_RECHEIO_EXTRA)}` : 'Inclusos')}
-    ${perSliceRows ? `<div class="slice-summary"><h3>Sabores por fatia</h3>${perSliceRows}</div>` : ''}
+    ${perSliceRows ? `<div class="slice-summary"><h3>Sabores por parte (3 partes)</h3>${perSliceRows}</div>` : ''}
     ${summaryRow('Orégano', state.oregano === 'sim' ? 'Com orégano' : 'Sem orégano', 'Incluso')}
     <div class="total-row"><span>Total da pizza</span><strong>${fmt(getTotal())}</strong></div>
     <p class="summary-disclaimer">O valor não inclui taxa de entrega. Ela será informada no atendimento.</p>
@@ -299,9 +300,9 @@ function field(id, label, type, attributes, wide = false) {
 function renderCompletion() {
   const address = [state.cliente.rua, state.cliente.numero, state.cliente.bairro, state.cliente.complemento].filter(Boolean).join(', ');
   const sliceFlavors = state.modoRecheio === 'fatia'
-    ? `<div><span>Sabores por fatia</span><b>${Array.from({ length: state.tamanho.fatias }, (_, index) => {
+    ? `<div><span>Sabores por parte</span><b>${Array.from({ length: PARTES_SABOR }, (_, index) => {
       const toppings = state.recheiosPorFatia[index] || [];
-      return `Fatia ${index + 1}: ${escapeHTML(toppings.length ? toppings.map(getRecheioLabel).join(', ') : 'sem recheios')}`;
+      return `Parte ${index + 1}: ${escapeHTML(toppings.length ? toppings.map(getRecheioLabel).join(', ') : 'sem recheios')}`;
     }).join(' · ')}</b></div>`
     : '';
   return `<div class="completion-card">
@@ -404,7 +405,7 @@ function applyPreset(id) {
   const recipe = SUGESTOES.find(item => item.id === id);
   if (!recipe) return;
   const otherSlices = state.modoRecheio === 'fatia'
-    ? Array.from({ length: state.tamanho.fatias }, (_, index) => index === state.fatiaAtiva ? [] : state.recheiosPorFatia[index] || []).flat()
+    ? Array.from({ length: PARTES_SABOR }, (_, index) => index === state.fatiaAtiva ? [] : state.recheiosPorFatia[index] || []).flat()
     : [];
   const combined = [...otherSlices, ...recipe.items];
   const uniqueCount = new Set(combined.map(item => getRecheioLabel(item).trim().toLocaleLowerCase('pt-BR'))).size;
@@ -561,15 +562,15 @@ function renderPizza() {
   pizza.className = `pizza${state.tamanho ? ` tamanho-${state.tamanho.id}` : ''}${state.massa?.id === 'integral' ? ' massa-integral' : ''}${state.tamanho ? '' : ' idle'}`;
   const canZoomSlice = state.modoRecheio === 'fatia' && state.previewMode === 'slice';
   pizza.classList.toggle('zoom-slice', canZoomSlice);
-  const centerAngle = ((state.fatiaAtiva + .5) * 360 / (state.tamanho?.fatias || 8)) - 90;
+  const centerAngle = ((state.fatiaAtiva + .5) * 360 / PARTES_SABOR) - 90;
   $('#pizza-content').style.setProperty('--slice-rotation', `${-90 - centerAngle}deg`);
   $('#pizza-hint').classList.toggle('hidden', !!state.tamanho);
   $('#pizza-sauce').classList.toggle('on', state.molho?.id === 'sim');
   const toppingMarkup = state.modoRecheio === 'fatia'
-    ? Array.from({ length: state.tamanho?.fatias || 0 }, (_, sliceIndex) => {
+    ? Array.from({ length: PARTES_SABOR }, (_, sliceIndex) => {
       const fillings = state.recheiosPorFatia[sliceIndex] || [];
-      const sliceCenter = (sliceIndex + .5) * 360 / (state.tamanho?.fatias || 8) - 90;
-      const sliceWidth = 360 / (state.tamanho?.fatias || 8);
+      const sliceCenter = (sliceIndex + .5) * 360 / PARTES_SABOR - 90;
+      const sliceWidth = 360 / PARTES_SABOR;
       return fillings.map((id, toppingIndex) => renderToppingPieces(id, sliceIndex * MAX_RECHEIOS + toppingIndex, sliceCenter, sliceWidth)).join('');
     }).join('')
     : state.recheios.map((id, index) => {
@@ -583,8 +584,8 @@ function renderPizza() {
       return `<span class="pizza oregano-spec" style="left:${(50 + radius * Math.cos(angle)).toFixed(1)}%;top:${(50 + radius * Math.sin(angle)).toFixed(1)}%"></span>`;
     }).join('') : '';
   const showCuts = (state.step >= 6 && state.step <= 7) || state.modoRecheio === 'fatia';
-  const sliceCount = state.tamanho?.fatias || 8;
-  $('#pizza-cuts').innerHTML = showCuts ? renderPizzaGuides(sliceCount) : '';
+  const visualPartCount = state.modoRecheio === 'fatia' ? PARTES_SABOR : state.tamanho?.fatias || 8;
+  $('#pizza-cuts').innerHTML = showCuts ? renderPizzaGuides(visualPartCount) : '';
   const previewControls = $('#preview-controls');
   previewControls.hidden = state.modoRecheio !== 'fatia';
   previewControls.querySelectorAll('[data-preview-mode]').forEach(button => {
@@ -595,13 +596,13 @@ function renderPizza() {
   const focusedFillings = state.recheiosPorFatia[state.fatiaAtiva] || [];
   const sliceLabel = $('#slice-preview-label');
   sliceLabel.hidden = state.modoRecheio !== 'fatia' || state.previewMode !== 'slice';
-  sliceLabel.textContent = `Fatia ${state.fatiaAtiva + 1} · ${focusedFillings.length ? focusedFillings.map(getRecheioLabel).join(' · ') : 'ainda sem recheio'}`;
+  sliceLabel.textContent = `Parte ${state.fatiaAtiva + 1} de ${PARTES_SABOR} · ${focusedFillings.length ? focusedFillings.map(getRecheioLabel).join(' · ') : 'ainda sem recheio'}`;
   const description = [];
   if (state.tamanho) description.push(state.tamanho.label);
   if (state.massa) description.push(`massa ${state.massa.label.toLowerCase()}`);
   if (getRecheiosUnicos().length) description.push(`${getRecheiosUnicos().length} ingrediente${getRecheiosUnicos().length === 1 ? '' : 's'}`);
   $('#pizza-status').textContent = canZoomSlice
-    ? `Detalhe da fatia ${state.fatiaAtiva + 1} de ${sliceCount}`
+    ? `Detalhe da parte ${state.fatiaAtiva + 1} de ${PARTES_SABOR}`
     : description.length ? description.join(' · ') : 'Uma receita esperando por você';
   $('#pizza-legend').innerHTML = [
     state.tamanho && `<li><strong>${state.tamanho.label}</strong></li>`,
